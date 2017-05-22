@@ -61,9 +61,6 @@ class LogViewer:
         ip_list['Country'] = ip_list['IP'].apply(lambda x: code_to_country(get_loc(x).country))    
         self.ip_list = ip_list
 
-
-
-
     def country_extract(self):
     
         country_count = self.ip_list.groupby('Country').sum().sort_values(by='Freq', ascending=False)

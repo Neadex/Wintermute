@@ -1,7 +1,6 @@
 
 # coding: utf-8
 
-# In[1]:
 
 features = ["duration", "protocol_type", "service", "flag", "src_bytes",
             "dst_bytes", "land", "wrong_fragment","urgent", "hot", "num_failed_logins",
@@ -18,8 +17,6 @@ features = ["duration", "protocol_type", "service", "flag", "src_bytes",
 print('\n\n ----- Starting training ----- ')
 print("\nNombre de features initiales: ", len(features))
 
-
-# In[2]:
 
 import csv, os, sys
 import pandas as pd
@@ -46,15 +43,13 @@ data.columns = features
 data = data.loc[data["protocol_type"]=="tcp"]
 
 print('\nListe des features :', pd.DataFrame(data.columns.values),'\n')
-## 'duration' a été retiré des relvant_features
+## 'duration' a été retiré des relevant_features
 relevant_features = ['src_bytes', 'dst_bytes', 'service', "label"]
 data = data[relevant_features]
 
 service_dummies = pd.get_dummies(data['service'])
-#flag_dummies = pd.get_dummies(data['flag'])
 
 data.drop('service',axis=1, inplace=True)
-#data.drop('flag',axis=1, inplace=True)
 data = pd.concat([data, service_dummies], axis=1)
 data.drop('login', axis=1, inplace=True)
 
@@ -86,8 +81,6 @@ data = imp.transform(data)
 
 data = normalize(data)
 
-
-# In[9]:
 
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
@@ -124,9 +117,6 @@ from sklearn import svm
 model = svm.SVC(C=8.0, gamma=0.03125, kernel='rbf',class_weight={1:10})
 model.fit(data,target)
 
-
-# In[7]:
-
 from sklearn import metrics
 
 preds = model.predict(train_data)
@@ -139,9 +129,6 @@ resultats = {'accuracy': metrics.accuracy_score(targs, preds),
 
 df_resultats = pd.DataFrame.from_dict(resultats, orient='index')
 df_resultats.columns = ['']
-
-
-# In[11]:
 
 ## Export du modele en fichier pkl pour l'intégrer à la prochaine étape du dev (probe)
 from sklearn.externals import joblib
